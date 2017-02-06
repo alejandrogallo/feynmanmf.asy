@@ -6,5 +6,5 @@ clean:
 	-rm -f test/feynmanmf.asy
 
 test:
-	cp feynmanmf.asy test/
+	ln -s -f ../feynmanmf.asy test/feynmanmf.asy
 	$(MAKE) -C test
