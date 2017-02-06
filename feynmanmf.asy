@@ -26,7 +26,7 @@ path photon(path p, real amp = photonamplitude, real width=photonwidth)
 
   p1 = point(p, 0);
   for ( int i = 0; i < ncurls; i+=1 ) {
-    p2 = point(p, (i+1)/ncurls);
+    p2 = arcpoint(p, pathlen*(i+1)/ncurls);
     c = (p1 + p2)/2;
     if (counter_clock_wise)
       c -= rotate(90)*h*(c-p1);
