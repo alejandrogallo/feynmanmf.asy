@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/alejandrogallo/feynmanmf.asy.svg?branch=master)](https://travis-ci.org/alejandrogallo/feynmanmf.asy)
 
 # Feynmanmf.asy
 
