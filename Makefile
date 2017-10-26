@@ -17,3 +17,11 @@ readme-imgs:
 			"![$$i](https://github.com/alejandrogallo/feynmanmf.asy/raw/images/$$i)" \
 			| tee -a README.md; \
 	done
+
+update-images:
+	make -C test png
+	git checkout images
+	git reset --hard af177b5
+	git add -f test/*.png
+	git commit -m "Update test images"
+	git push -f origin images
