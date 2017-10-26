@@ -2,10 +2,10 @@
 .DEFAULT_GOAL := test
 
 clean:
+	rm feynmanmf.asy
 	make -C test/ clean
 
-test:
-	ln -s -f ../feynmanmf.asy test/feynmanmf.asy
+test: feynmanmf.asy
 	$(MAKE) -C test
 
 readme-imgs:
@@ -26,3 +26,7 @@ update-images:
 	git add -f test/*.png
 	git commit -m "Update test images"
 	git push -f origin images
+
+feynmanmf.asy: $(wildcard src/*)
+	cpp src/feynmanmf.asy -o $@
+	sed -i 's/^#.*//' $@
