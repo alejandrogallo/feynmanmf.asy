@@ -76,10 +76,11 @@ real ysep = -250;
 
 for ( int i = 0; i < Integrals.length; i+=1 ) {
   pair S = i<8 ? (i * xsep, 0) : ((i-8) * xsep, ysep);
+  write(shift(S) * Integrals[i]);
   draw(shift(S) * Integrals[i], true);
   label(
-    Integrals[i].name, shift(S + (0,20)) * (
-      0.5*Integrals[i].r1 + 0.5*Integrals[i].r2
+    Integrals[i].diagram.name, shift(S + (0,20)) * (
+      0.5*Integrals[i].diagram.vertices[0] + 0.5*Integrals[i].diagram.vertices[1]
     )
   );
 }

@@ -5,12 +5,17 @@ real[] feynmanmf_version = {1,1};
 // scale all other defaults of the feynman module appropriately
 fmdefaults();
 
+//Style for the photon lines
 real photonwidth = 14;
 real photonamplitude = -1;
 
+// Change also the current pend and arrows to mock feynmanmf
 currentpen = linewidth(2bp)+fontsize(20);
 currentarrow = MidArrow(8bp);
 
+/**
+ * \brief Create a nice photon along a path p
+ */
 path photon(path p, real amp = photonamplitude, real width=photonwidth)
 {
   real pathlen = arclength(p);
@@ -42,6 +47,9 @@ path photon(path p, real amp = photonamplitude, real width=photonwidth)
   return g;
 };
 
+/**
+ * \brief Draw a photon along a path `p`
+ */
 void drawPhoton(
   picture pic = currentpicture,
   path p,
@@ -60,72 +68,120 @@ void drawPhoton(
 string particle_indices = "abcdefgh";
 string hole_indices = "ijklmno";
 
-struct CoulombIntegral {
-  string indices;
+/**
+ * \brief Main parent class for the diagrams.
+ * Every diagram has to have a minimum of data defined.
+ *   \param name Name of the diagram;
+ *   \param indices Indices that the diagram contains
+ *   \param edges Edges defined by the diagram
+ *   \param vertices How many vertices the diagram has, for example for the
+          coulomb interaction it's two, which defines two position vectors.
+ */
+struct Diagram {
   string name;
-  real angles[];
-  pair r1;
-  pair r2;
-  real edges_length = 100;
+  string indices;
   path edges[];
+  pair vertices[];
+}
+
+/**
+ * \brief Casting of Diagram into string.
+ * For example this is used by the operation
+ *   (string) some_diagram_variable
+ */
+string operator cast(Diagram diagram){ return diagram.name; }
+
+/**
+ * \brief Transform a diagram by some transformation.
+ * It creates a new diagram with spatial information transformed by t.
+ */
+Diagram operator * (transform t, Diagram diagram) {
+  Diagram result;
+  result.edges = t * diagram.edges;
+  result.vertices = t * diagram.vertices;
+  result.indices = diagram.indices;
+  result.name = diagram.name;
+  return result;
+}
+
+/**
+ * \brief Serialization of the diagram to stdout.
+ */
+void write(Diagram diagram) {
+  write("Name   : ", diagram.name);
+  write("Indices: ", diagram.indices);
+}
+
+/**
+ * \brief CoulombIntegral class to create Coulomb terms quickly.
+ * It is a 'subclass' of Diagram in so far that it has a diagram attribute.
+ */
+struct CoulombIntegral {
+  Diagram diagram;
+  real angles[];
+  real edges_length = 100;
+  void operator init(
+    CoulombIntegral other
+  ){
+    this.diagram = other.diagram;
+    this.angles = other.angles;
+    this.edges_length = other.edges_length;
+  };
   void operator init(
     string indices = "abij",
-    pair r1 = (0,0),
-    pair r2 = (this.edges_length,0),
+    pair vertices[] = {(0,0), (this.edges_length,0)},
     real angles[] = {0,0,0,0}
   ){
-    this.indices = indices;
-    this.r1 = r1;
-    this.r2 = r2;
+    this.diagram.indices = indices;
+    this.diagram.vertices = vertices;
+    this.diagram.name = "$V^{"+substr(this.diagram.indices, 0, 2)+"}_{"+substr(this.diagram.indices, 2)+"}$";
     this.angles = angles;
-    this.name = "$V^{"+substr(this.indices, 0, 2)+"}_{"+substr(this.indices, 2)+"}$";
-    if ( length(indices) != 4 ) {
+    if ( length(this.diagram.indices) != 4 ) {
       write("Length of the Vpqrs must be 4");
       exit();
     }
     pair point;
     real angle;
-    for ( int i = 0; i < length(indices); i+=1 ) {
-      point = (i == 0 || i == 2) ? this.r1 : this.r2;
+    for ( int i = 0; i < length(this.diagram.indices); i+=1 ) {
+      point = this.diagram.vertices[i % 2];
       angle = this.angles[i];
       if (i < 2) {
-        if (find(particle_indices, substr(indices, i, 1)) != -1) {
-          this.edges.append(point .. point + this.edges_length*dir(angle));
+        if (find(particle_indices, substr(this.diagram.indices, i, 1)) != -1) {
+          this.diagram.edges.append(point .. point + this.edges_length*dir(angle));
         } else {
-          this.edges.append(point .. point + dir(-angle)*this.edges_length);
+          this.diagram.edges.append(point .. point + dir(-angle)*this.edges_length);
         }
       } else {
-        if (find(particle_indices, substr(indices, i, 1)) != -1) {
-          this.edges.append(point + dir(-angle)*this.edges_length .. point);
+        if (find(particle_indices, substr(this.diagram.indices, i, 1)) != -1) {
+          this.diagram.edges.append(point + dir(-angle)*this.edges_length .. point);
         } else {
-          this.edges.append(point + this.edges_length*dir(angle) .. point);
+          this.diagram.edges.append(point + this.edges_length*dir(angle) .. point);
         }
       }
     }
   };
 };
 
+CoulombIntegral operator * (transform t, CoulombIntegral Vpqrs) {
+  CoulombIntegral result = CoulombIntegral(Vpqrs);
+  result.diagram = t * result.diagram;
+  return result;
+}
+
+Diagram operator cast(CoulombIntegral Vpqrs){
+  return Vpqrs.diagram;
+}
+
 void draw(CoulombIntegral Vpqrs, bool labels=false){
-  drawPhoton(Vpqrs.r1--Vpqrs.r2);
-  for ( int i = 0; i < Vpqrs.edges.length; i+=1 ) {
-    drawFermion(Vpqrs.edges[i]);
+  drawPhoton(Vpqrs.diagram.vertices[0]--Vpqrs.diagram.vertices[1]);
+  for ( int i = 0; i < Vpqrs.diagram.edges.length; i+=1 ) {
+    drawFermion(Vpqrs.diagram.edges[i]);
   }
   if ( labels ) {
-    for ( int i = 0; i < Vpqrs.edges.length; i+=1 ) {
-      string index = substr(Vpqrs.indices, i, 1);
-      label("$"+index+"$", Vpqrs.edges[i]);
+    for ( int i = 0; i < Vpqrs.diagram.edges.length; i+=1 ) {
+      string index = substr(Vpqrs.diagram.indices, i, 1);
+      label("$"+index+"$", Vpqrs.diagram.edges[i]);
     }
   }
 };
 
-CoulombIntegral operator * (transform t, CoulombIntegral Vpqrs) {
-  CoulombIntegral result;
-  for ( int i = 0; i < Vpqrs.edges.length; i+=1 ) {
-    result.edges.append(t * Vpqrs.edges[i]);
-  }
-  result.r1 = t * Vpqrs.r1;
-  result.r2 = t * Vpqrs.r2;
-  result.indices = Vpqrs.indices;
-  result.name = Vpqrs.name;
-  return result;
-}
