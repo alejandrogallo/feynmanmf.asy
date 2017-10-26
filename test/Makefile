@@ -21,3 +21,5 @@ jpg: pdf
 clean:
 	-rm *.pdf
 	-rm *.png
+	-rm *.jpg
+	-rm *.eps
