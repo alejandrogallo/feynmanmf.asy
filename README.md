@@ -11,3 +11,9 @@ package [feynman.asy](http://asymptote.sourceforge.net/doc/feynman.html) for
 documentation.  It tries to respect the *API* used in the asymptote file
 `feynman.asy`, so if you already have some diagrams lying around importing
 `feynmanmf.asy` should work just fine.
+### `test/coulomb_all.png`
+![test/coulomb_all.png](https://github.com/alejandrogallo/feynmanmf.asy/raw/images/test/coulomb_all.png)
+### `test/coulomb_integral_raw.png`
+![test/coulomb_integral_raw.png](https://github.com/alejandrogallo/feynmanmf.asy/raw/images/test/coulomb_integral_raw.png)
+### `test/curved_photon.png`
+![test/curved_photon.png](https://github.com/alejandrogallo/feynmanmf.asy/raw/images/test/curved_photon.png)
