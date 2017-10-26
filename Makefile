@@ -20,8 +20,10 @@ readme-imgs:
 
 update-images:
 	make -C test png
+	mv test new_test
 	git checkout images
 	git reset --hard af177b5
+	mv new_test test
 	git add -f test/*.png
 	git commit -m "Update test images"
 	git push -f origin images
