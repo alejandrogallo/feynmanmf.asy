@@ -55,4 +55,9 @@ void write(Diagram diagram) {
     return result; \
   }
 
+#define DIAGRAM_CREATE_CASTING_OPERATOR(CLASS_NAME)\
+  Diagram operator cast(CLASS_NAME diagram){ \
+    return diagram.diagram; \
+  }
+
 #endif

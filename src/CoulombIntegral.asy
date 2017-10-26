@@ -54,10 +54,8 @@ struct CoulombIntegral {
 };
 
 DIAGRAM_CREATE_TRANSFORM_OPERATOR(CoulombIntegral)
+DIAGRAM_CREATE_CASTING_OPERATOR(CoulombIntegral)
 
-Diagram operator cast(CoulombIntegral Vpqrs){
-  return Vpqrs.diagram;
-}
 
 void draw(CoulombIntegral Vpqrs, bool labels=false){
   drawPhoton(Vpqrs.diagram.vertices[0]--Vpqrs.diagram.vertices[1]);
