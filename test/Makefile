@@ -1,25 +1,29 @@
-all: pdf
+all: feynmanmf.asy pdf
 
-pdf:
-	for i in *.asy; do \
-		 asy -f pdf $$(basename $$i); \
-		 echo $$i; \
-	done
+TEST_SOURCES = $(filter-out feynmanmf.asy,$(wildcard *.asy))
+SOURCES = $(TEST_SOURCES) ../feynmanmf.asy
+PDF_FILES = $(patsubst %.asy,%.pdf,$(TEST_SOURCES))
+JPG_FILES = $(patsubst %.asy,%.jpg,$(TEST_SOURCES))
+PNG_FILES = $(patsubst %.asy,%.png,$(TEST_SOURCES))
 
-png: pdf
-	for i in *.pdf; do \
-		 convert -density 400 $$i $$(basename $$i .pdf).png; \
-		 echo $$i; \
-	done
+../feynmanmf.asy:
+	make -C .. feynmanmf.asy
 
-jpg: pdf
-	for i in *.pdf; do \
-		 convert -density 400 $$i $$(basename $$i .pdf).jpg; \
-		 echo $$i; \
-	done
+feynmanmf.asy: ../feynmanmf.asy
+	ln -s ../feynmanmf.asy feynmanmf.asy
+
+
+pdf: $(PDF_FILES)
+%.pdf: %.asy
+	asy -f pdf $*.asy
+
+png: $(PNG_FILES)
+%.png: %.pdf
+	convert -density 400 $< $@
+
+jpg: $(JPG_FILES)
+%.jpg: %.pdf
+	convert -density 400 $< $@
 
 clean:
-	-rm *.pdf
-	-rm *.png
-	-rm *.jpg
-	-rm *.eps
+	-rm $(wildcard *.pdf) $(wildcard *.png) $(wildcard *.jpg) $(wildcard *.eps)
