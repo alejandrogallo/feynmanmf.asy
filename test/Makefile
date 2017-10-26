@@ -3,16 +3,13 @@ all: pdf
 pdf:
 	for i in *.asy; do \
 		 asy -f pdf $$(basename $$i); \
+		 echo $$i; \
 	done
 
-png:
-	for i in *.asy; do \
-		 asy -f png $$(basename $$i); \
-	done
-
-svg:
-	for i in *.asy; do \
-		 asy -f svg $$(basename $$i); \
+png: pdf
+	for i in *.pdf; do \
+		 convert -density 400 $$i $$(basename $$i .pdf).png; \
+		 echo $$i; \
 	done
 
 clean:
