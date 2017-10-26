@@ -68,49 +68,7 @@ void drawPhoton(
 string particle_indices = "abcdefgh";
 string hole_indices = "ijklmno";
 
-/**
- * \brief Main parent class for the diagrams.
- * Every diagram has to have a minimum of data defined.
- *   \param name Name of the diagram;
- *   \param indices Indices that the diagram contains
- *   \param edges Edges defined by the diagram
- *   \param vertices How many vertices the diagram has, for example for the
-          coulomb interaction it's two, which defines two position vectors.
- */
-struct Diagram {
-  string name;
-  string indices;
-  path edges[];
-  pair vertices[];
-}
-
-/**
- * \brief Casting of Diagram into string.
- * For example this is used by the operation
- *   (string) some_diagram_variable
- */
-string operator cast(Diagram diagram){ return diagram.name; }
-
-/**
- * \brief Transform a diagram by some transformation.
- * It creates a new diagram with spatial information transformed by t.
- */
-Diagram operator * (transform t, Diagram diagram) {
-  Diagram result;
-  result.edges = t * diagram.edges;
-  result.vertices = t * diagram.vertices;
-  result.indices = diagram.indices;
-  result.name = diagram.name;
-  return result;
-}
-
-/**
- * \brief Serialization of the diagram to stdout.
- */
-void write(Diagram diagram) {
-  write("Name   : ", diagram.name);
-  write("Indices: ", diagram.indices);
-}
+#include "Diagram.asy"
 
 struct NBodyDiagram {
   Diagram diagram;

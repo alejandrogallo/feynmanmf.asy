@@ -1,6 +1,8 @@
 #ifndef _COULOMBINTEGRAL_DEFINED
 #define _COULOMBINTEGRAL_DEFINED
 
+#include "Diagram.asy"
+
 /**
  * \brief CoulombIntegral class to create Coulomb terms quickly.
  * It is a 'subclass' of Diagram in so far that it has a diagram attribute.
@@ -51,11 +53,7 @@ struct CoulombIntegral {
   };
 };
 
-CoulombIntegral operator * (transform t, CoulombIntegral Vpqrs) {
-  CoulombIntegral result = CoulombIntegral(Vpqrs);
-  result.diagram = t * result.diagram;
-  return result;
-}
+DIAGRAM_CREATE_TRANSFORM_OPERATOR(CoulombIntegral)
 
 Diagram operator cast(CoulombIntegral Vpqrs){
   return Vpqrs.diagram;
