@@ -1,8 +1,8 @@
 .PHONY: test
-.DEFAULT_GOAL := test
+.DEFAULT_GOAL := feynmanmf.asy
 
 clean:
-	rm feynmanmf.asy
+	-rm feynmanmf.asy
 	make -C test/ clean
 
 test: feynmanmf.asy

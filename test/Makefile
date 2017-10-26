@@ -12,6 +12,8 @@ PNG_FILES = $(patsubst %.asy,%.png,$(TEST_SOURCES))
 feynmanmf.asy: ../feynmanmf.asy
 	ln -s ../feynmanmf.asy feynmanmf.asy
 
+$(PDF_FILES): ../feynmanmf.asy
+$(PNG_FILES): ../feynmanmf.asy
 
 pdf: $(PDF_FILES)
 %.pdf: %.asy
@@ -26,4 +28,5 @@ jpg: $(JPG_FILES)
 	convert -density 400 $< $@
 
 clean:
+	-rm $(wildcard feynmanmf.asy)
 	-rm $(wildcard *.pdf) $(wildcard *.png) $(wildcard *.jpg) $(wildcard *.eps)
