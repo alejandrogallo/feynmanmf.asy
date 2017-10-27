@@ -1,5 +1,6 @@
 #ifndef _DIAGRAM_DEFINED
 #define _DIAGRAM_DEFINED
+
 /**
  * \brief Main parent class for the diagrams.
  * Every diagram has to have a minimum of data defined.
@@ -11,10 +12,18 @@
  */
 struct Diagram {
   string name;
+  string particle_indices = "abcdefgh";
+  string hole_indices = "ijklmno";
   string indices;
   path edges[];
   pair vertices[];
   void clear_edges() { this.edges = new path[]{}; };
+  bool is_hole(int i){
+    return find(this.hole_indices, substr(this.indices, i, 1)) != -1;
+  };
+  bool is_particle(int i){
+    return find(this.particle_indices, substr(this.indices, i, 1)) != -1;
+  };
 }
 
 /**
