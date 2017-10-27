@@ -65,8 +65,6 @@ void drawPhoton(
   draw(pic, photon(p, amp, width), fgpen);
 };
 
-string particle_indices = "abcdefgh";
-string hole_indices = "ijklmno";
 
 #include "Diagram.asy"
 
