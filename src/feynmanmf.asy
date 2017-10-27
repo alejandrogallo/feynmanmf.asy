@@ -70,9 +70,6 @@ string hole_indices = "ijklmno";
 
 #include "Diagram.asy"
 
-struct NBodyDiagram {
-  Diagram diagram;
-  int N;
-}
 
 #include "CoulombIntegral.asy"
+#include "CoupledCluster.asy"

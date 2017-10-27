@@ -60,4 +60,64 @@ void write(Diagram diagram) {
     return diagram.diagram; \
   }
 
+#define CREATE_NBODY_DIAGRAM(_NAME, _N)                                                                                   \
+  struct  _NAME {                                                                                                         \
+    Diagram diagram;                                                                                                      \
+    int N = _N;                                                                                                           \
+    real angles[];                                                                                                        \
+    real edges_length = 100;                                                                                              \
+    void operator init(                                                                                                   \
+      _NAME other                                                                                                         \
+    ){                                                                                                                    \
+      this.diagram = other.diagram;                                                                                       \
+      this.angles = other.angles;                                                                                         \
+      this.edges_length = other.edges_length;                                                                             \
+    };                                                                                                                    \
+    void operator init(                                                                                                   \
+      string indices,                                                                                                     \
+      pair vertices[] = {},                                                                                               \
+      real angles[] = {}                                                                                                  \
+    ){                                                                                                                    \
+      if (vertices.length == 0) {                                                                                         \
+        for ( int i = 0; i < this.N; i+=1 ) {                                                                             \
+          this.diagram.vertices[i] = (i * this.edges_length, 0);                                                          \
+        }                                                                                                                 \
+      } else {                                                                                                            \
+        this.diagram.vertices = vertices;                                                                                 \
+      }                                                                                                                   \
+      if (angles.length == 0) {                                                                                           \
+        for ( int i = 0; i < 2 * this.N; i+=1 ) {                                                                         \
+          this.angles[i] = 0;                                                                                             \
+        }                                                                                                                 \
+      } else {                                                                                                            \
+        this.angles = angles;                                                                                             \
+      }                                                                                                                   \
+      this.diagram.indices = indices;                                                                                     \
+      this.diagram.name = '$X^{'+substr(this.diagram.indices, 0, this.N)+'}_{'+substr(this.diagram.indices, this.N)+'}$'; \
+      if ( length(this.diagram.indices) != 2 * this.N ) {                                                                 \
+        write('Indices Length of the Tensor must be ' + (string) (this.N * 2));                                           \
+        exit();                                                                                                           \
+      }                                                                                                                   \
+      pair point;                                                                                                         \
+      real angle;                                                                                                         \
+      for ( int i = 0; i < length(this.diagram.indices); i+=1 ) {                                                         \
+        point = this.diagram.vertices[i % this.N];                                                                        \
+        angle = this.angles[i];                                                                                           \
+        if (i < this.N) {                                                                                                 \
+          if (find(particle_indices, substr(this.diagram.indices, i, 1)) != -1) {                                         \
+            this.diagram.edges.append(point .. point + this.edges_length*dir(angle));                                     \
+          } else {                                                                                                        \
+            this.diagram.edges.append(point .. point + dir(-angle)*this.edges_length);                                    \
+          }                                                                                                               \
+        } else {                                                                                                          \
+          if (find(particle_indices, substr(this.diagram.indices, i, 1)) != -1) {                                         \
+            this.diagram.edges.append(point + dir(-angle)*this.edges_length .. point);                                    \
+          } else {                                                                                                        \
+            this.diagram.edges.append(point + this.edges_length*dir(angle) .. point);                                     \
+          }                                                                                                               \
+        }                                                                                                                 \
+      }                                                                                                                   \
+    };                                                                                                                    \
+  };
+
 #endif
