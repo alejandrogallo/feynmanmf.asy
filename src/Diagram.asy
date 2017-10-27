@@ -54,6 +54,18 @@ void write(Diagram diagram) {
   write("Indices: ", diagram.indices);
 }
 
+void draw(Diagram diagram, bool labels=false){
+  for ( int i = 0; i < diagram.edges.length; i+=1 ) {
+    drawFermion(diagram.edges[i]);
+  }
+  if ( labels ) {
+    for ( int i = 0; i < diagram.edges.length; i+=1 ) {
+      string index = substr(diagram.indices, i, 1);
+      label("$"+index+"$", diagram.edges[i]);
+    }
+  }
+};
+
 /**
  * \brief Define a creator of Transform * Class operator for any derived
  * structure from Diagram.
