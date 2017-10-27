@@ -14,6 +14,7 @@ struct Diagram {
   string indices;
   path edges[];
   pair vertices[];
+  void clear_edges() { this.edges = new path[]{}; };
 }
 
 /**
