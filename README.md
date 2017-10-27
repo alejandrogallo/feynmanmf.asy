@@ -23,3 +23,5 @@ documentation.  It tries to respect the *API* used in the asymptote file
 ![test/coupledcluster_all.png](https://github.com/alejandrogallo/feynmanmf.asy/raw/images/test/coupledcluster_all.png)
 ### `test/curved_photon.png`
 ![test/curved_photon.png](https://github.com/alejandrogallo/feynmanmf.asy/raw/images/test/curved_photon.png)
+### `test/onebody_all.png`
+![test/onebody_all.png](https://github.com/alejandrogallo/feynmanmf.asy/raw/images/test/onebody_all.png)

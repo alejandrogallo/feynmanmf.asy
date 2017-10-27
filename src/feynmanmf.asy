@@ -1,6 +1,6 @@
 import feynman;
 
-real[] feynmanmf_version = {1,2};
+real[] feynmanmf_version = {1,3};
 
 // scale all other defaults of the feynman module appropriately
 fmdefaults();
