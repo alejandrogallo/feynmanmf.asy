@@ -17,6 +17,13 @@ DIAGRAM_CREATE_CASTING_OPERATOR(CoupledClusterT3)
 
 
 void draw(CoupledClusterT1 term, bool labels=false){
+  real XProj = dot(
+    min(term.diagram.edges[0]) - term.diagram.vertices[0],
+    (1,0)
+  );
+  pair vertex_l = term.diagram.vertices[0] + (-XProj,0);
+  pair vertex_r = term.diagram.vertices[0] + (XProj,0);
+  draw(vertex_l -- vertex_r);
   for ( int i = 0; i < term.diagram.edges.length; i+=1 ) {
     drawFermion(term.diagram.edges[i]);
   }
